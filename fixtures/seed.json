@@ -1,0 +1,108 @@
+[
+  {
+    "model": "billing.taxconfig",
+    "pk": 1,
+    "fields": { "gst_rate": "5.00", "is_active": true, "updated_at": "2026-03-03T00:00:00Z" }
+  },
+
+  { "model": "menu.category", "pk": 1, "fields": { "name": "Starters", "description": "", "is_active": true } },
+  { "model": "menu.category", "pk": 2, "fields": { "name": "Main Course", "description": "", "is_active": true } },
+  { "model": "menu.category", "pk": 3, "fields": { "name": "Drinks", "description": "", "is_active": true } },
+
+  {
+    "model": "menu.menuitem",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Veg Soup",
+      "description": "Hot vegetable soup",
+      "price": "120.00",
+      "is_available": true,
+      "image": "",
+      "created_at": "2026-03-03T00:00:00Z",
+      "updated_at": "2026-03-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 2,
+    "fields": {
+      "category": 2,
+      "name": "Paneer Butter Masala",
+      "description": "Creamy paneer gravy",
+      "price": "240.00",
+      "is_available": true,
+      "image": "",
+      "created_at": "2026-03-03T00:00:00Z",
+      "updated_at": "2026-03-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 3,
+    "fields": {
+      "category": 3,
+      "name": "Lemon Soda",
+      "description": "Fresh lemon soda",
+      "price": "80.00",
+      "is_available": true,
+      "image": "",
+      "created_at": "2026-03-03T00:00:00Z",
+      "updated_at": "2026-03-03T00:00:00Z"
+    }
+  },
+
+  { "model": "tables.restauranttable", "pk": 1, "fields": { "name": "T1", "capacity": 4, "status": "AVAILABLE", "is_active": true, "notes": "" } },
+  { "model": "tables.restauranttable", "pk": 2, "fields": { "name": "T2", "capacity": 4, "status": "AVAILABLE", "is_active": true, "notes": "" } },
+  { "model": "tables.restauranttable", "pk": 3, "fields": { "name": "T3", "capacity": 6, "status": "AVAILABLE", "is_active": true, "notes": "" } },
+
+  {
+    "model": "inventory.supplier",
+    "pk": 1,
+    "fields": { "name": "Default Supplier", "phone": "9999999999", "email": "", "address": "", "is_active": true }
+  },
+  {
+    "model": "inventory.rawmaterial",
+    "pk": 1,
+    "fields": {
+      "name": "Paneer",
+      "unit": "GM",
+      "quantity_in_stock": "5000.000",
+      "min_stock_level": "1000.000",
+      "supplier": 1,
+      "is_active": true
+    }
+  },
+  {
+    "model": "inventory.rawmaterial",
+    "pk": 2,
+    "fields": {
+      "name": "Butter",
+      "unit": "GM",
+      "quantity_in_stock": "2000.000",
+      "min_stock_level": "500.000",
+      "supplier": 1,
+      "is_active": true
+    }
+  },
+  {
+    "model": "inventory.rawmaterial",
+    "pk": 3,
+    "fields": {
+      "name": "Lemon",
+      "unit": "PCS",
+      "quantity_in_stock": "50.000",
+      "min_stock_level": "10.000",
+      "supplier": 1,
+      "is_active": true
+    }
+  },
+
+  { "model": "inventory.recipe", "pk": 1, "fields": { "menu_item": 2, "updated_at": "2026-03-03T00:00:00Z" } },
+  { "model": "inventory.recipeitem", "pk": 1, "fields": { "recipe": 1, "material": 1, "quantity_required": "200.000" } },
+  { "model": "inventory.recipeitem", "pk": 2, "fields": { "recipe": 1, "material": 2, "quantity_required": "50.000" } },
+
+  { "model": "inventory.recipe", "pk": 2, "fields": { "menu_item": 3, "updated_at": "2026-03-03T00:00:00Z" } },
+  { "model": "inventory.recipeitem", "pk": 3, "fields": { "recipe": 2, "material": 3, "quantity_required": "1.000" } }
+]
+

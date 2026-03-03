@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Tables | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">Tables</h1>
+      <div class="text-muted">Track table availability and assign orders.</div>
+    </div>
+    {% if user.is_superuser or user.role == "ADMIN" or user.role == "MANAGER" %}
+      <a class="btn btn-dark" href="{% url 'tables:table_create' %}">
+        <i class="bi bi-plus-circle me-1"></i>Add Table
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="row g-3">
+    {% for t in tables %}
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="fw-semibold">{{ t.name }}</div>
+                <div class="text-muted small">Capacity: {{ t.capacity }}</div>
+              </div>
+              {% if t.status == "AVAILABLE" %}
+                <span class="badge text-bg-success">Available</span>
+              {% elif t.status == "OCCUPIED" %}
+                <span class="badge text-bg-danger">Occupied</span>
+              {% else %}
+                <span class="badge text-bg-warning">Reserved</span>
+              {% endif %}
+            </div>
+
+            {% if t.notes %}
+              <div class="text-muted small mt-2">{{ t.notes }}</div>
+            {% endif %}
+
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+              {% if user.is_superuser or user.role == "ADMIN" or user.role == "MANAGER" %}
+                <a class="btn btn-sm btn-outline-dark" href="{% url 'tables:table_update' t.pk %}">
+                  <i class="bi bi-pencil-square me-1"></i>Edit
+                </a>
+              {% endif %}
+              {% if user.is_superuser or user.role == "ADMIN" or user.role == "MANAGER" or user.role == "WAITER" %}
+                <form method="post" action="{% url 'tables:table_set_status' t.pk %}" class="d-flex gap-2">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="AVAILABLE">
+                  <button class="btn btn-sm btn-outline-success" type="submit">Available</button>
+                </form>
+                <form method="post" action="{% url 'tables:table_set_status' t.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="OCCUPIED">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Occupied</button>
+                </form>
+                <form method="post" action="{% url 'tables:table_set_status' t.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="RESERVED">
+                  <button class="btn btn-sm btn-outline-warning" type="submit">Reserved</button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="text-center text-muted py-5">No active tables yet.</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+    <nav class="mt-3">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endblock %}
+

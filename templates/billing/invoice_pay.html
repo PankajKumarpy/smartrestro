@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Invoice | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">Invoice for Order #{{ order.pk }}</h1>
+      <div class="text-muted">Table: <span class="fw-semibold">{{ order.table.name }}</span> • Invoice: <span class="fw-semibold">{{ invoice.invoice_no }}</span></div>
+    </div>
+    <a class="btn btn-outline-dark" href="{% url 'orders:order_detail' order.pk %}">
+      <i class="bi bi-arrow-left me-1"></i>Back to Order
+    </a>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-7">
+      <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Item</th>
+                <th class="text-end">Qty</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for it in order.items.all %}
+                <tr>
+                  <td class="fw-semibold">{{ it.menu_item.name }}</td>
+                  <td class="text-end">{{ it.quantity }}</td>
+                  <td class="text-end">₹{{ it.unit_price }}</td>
+                  <td class="text-end">₹{{ it.line_total }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="fw-semibold mb-2">Payment</div>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label">Discount (₹)</label>
+              {{ form.discount }}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Payment mode</label>
+              {{ form.payment_mode }}
+            </div>
+
+            <div class="border rounded p-3 bg-light">
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Subtotal</span>
+                <span class="fw-semibold">₹{{ order.subtotal }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">GST</span>
+                <span class="fw-semibold">{{ invoice.gst_rate }}%</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Status</span>
+                <span class="badge text-bg-secondary">{{ invoice.get_status_display }}</span>
+              </div>
+            </div>
+
+            <button class="btn btn-success w-100 mt-3" type="submit" {% if invoice.status == "PAID" %}disabled{% endif %}>
+              <i class="bi bi-check2-circle me-1"></i>Mark Paid & Deduct Stock
+            </button>
+          </form>
+          <div class="text-muted small mt-2">
+            Stock will be validated and auto-deducted using recipes when payment is recorded.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

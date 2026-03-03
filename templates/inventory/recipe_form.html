@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Recipe | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">Create Recipe</h1>
+      <div class="text-muted">Pick a menu item, then define raw materials.</div>
+    </div>
+    <a class="btn btn-outline-dark" href="{% url 'inventory:recipe_list' %}">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Menu item</label>
+            {{ form.menu_item }}
+          </div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-dark" type="submit"><i class="bi bi-check2-circle me-1"></i>Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

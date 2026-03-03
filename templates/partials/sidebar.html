@@ -1,0 +1,53 @@
+<div class="p-3">
+  <div class="d-flex align-items-center mb-3">
+    <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px;">
+      <i class="bi bi-shop"></i>
+    </div>
+    <div>
+      <div class="fw-semibold">Smart RMS</div>
+      <div class="text-muted small">Restaurant Panel</div>
+    </div>
+  </div>
+
+  <div class="list-group list-group-flush">
+    <a class="list-group-item list-group-item-action" href="{% url 'dashboard' %}">
+      <i class="bi bi-speedometer2 me-2"></i>Dashboard
+    </a>
+    <a class="list-group-item list-group-item-action" href="{% url 'menu:item_list' %}">
+      <i class="bi bi-journal-text me-2"></i>Menu
+    </a>
+    <a class="list-group-item list-group-item-action" href="{% url 'tables:table_list' %}">
+      <i class="bi bi-grid-3x3-gap me-2"></i>Tables
+    </a>
+    <a class="list-group-item list-group-item-action" href="{% url 'orders:order_list' %}">
+      <i class="bi bi-receipt-cutoff me-2"></i>Orders
+    </a>
+    {% if user.is_superuser or user.role == "KITCHEN" or user.role == "MANAGER" or user.role == "ADMIN" %}
+      <a class="list-group-item list-group-item-action" href="{% url 'orders:kitchen_board' %}">
+        <i class="bi bi-egg-fried me-2"></i>Kitchen (KOT)
+      </a>
+    {% endif %}
+    {% if user.is_superuser or user.role == "CASHIER" or user.role == "MANAGER" or user.role == "ADMIN" %}
+      <a class="list-group-item list-group-item-action" href="{% url 'billing:invoice_list' %}">
+        <i class="bi bi-cash-coin me-2"></i>Billing
+      </a>
+      <a class="list-group-item list-group-item-action" href="{% url 'reports:daily_closing' %}">
+        <i class="bi bi-graph-up-arrow me-2"></i>Reports
+      </a>
+    {% endif %}
+    {% if user.is_superuser or user.role == "MANAGER" or user.role == "ADMIN" %}
+      <a class="list-group-item list-group-item-action" href="{% url 'inventory:material_list' %}">
+        <i class="bi bi-box-seam me-2"></i>Inventory
+      </a>
+      <a class="list-group-item list-group-item-action" href="{% url 'users:staff_list' %}">
+        <i class="bi bi-people me-2"></i>Staff
+      </a>
+    {% endif %}
+    {% if user.is_superuser %}
+      <a class="list-group-item list-group-item-action" href="{% url 'admin:index' %}">
+        <i class="bi bi-gear me-2"></i>Admin
+      </a>
+    {% endif %}
+  </div>
+</div>
+

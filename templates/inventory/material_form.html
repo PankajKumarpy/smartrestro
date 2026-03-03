@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Raw Material | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">{% if object %}Edit Raw Material{% else %}Add Raw Material{% endif %}</h1>
+      <div class="text-muted">Maintain accurate stock details for recipe-based deduction.</div>
+    </div>
+    <a class="btn btn-outline-dark" href="{% url 'inventory:material_list' %}">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Name</label>
+            {{ form.name }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Unit</label>
+            {{ form.unit }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Supplier</label>
+            {{ form.supplier }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Quantity in stock</label>
+            {{ form.quantity_in_stock }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Minimum stock level</label>
+            {{ form.min_stock_level }}
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              {{ form.is_active }}
+              <label class="form-check-label">Active</label>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+          <button class="btn btn-dark" type="submit"><i class="bi bi-check2-circle me-1"></i>Save</button>
+          <a class="btn btn-outline-secondary" href="{% url 'inventory:material_list' %}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

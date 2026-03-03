@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Stock Movement | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">Stock In / Out</h1>
+      <div class="text-muted">Record inventory purchases, usage, or adjustments.</div>
+    </div>
+    <a class="btn btn-outline-dark" href="{% url 'inventory:material_list' %}">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Material</label>
+            {{ form.material }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Type</label>
+            {{ form.movement_type }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Quantity</label>
+            {{ form.quantity }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">Note</label>
+            {{ form.note }}
+          </div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-dark" type="submit"><i class="bi bi-check2-circle me-1"></i>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

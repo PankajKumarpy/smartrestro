@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Table | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">{% if object %}Edit Table{% else %}Add Table{% endif %}</h1>
+      <div class="text-muted">Maintain table layout and status.</div>
+    </div>
+    <a class="btn btn-outline-dark" href="{% url 'tables:table_list' %}">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Name</label>
+            {{ form.name }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Capacity</label>
+            {{ form.capacity }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Status</label>
+            {{ form.status }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">Notes</label>
+            {{ form.notes }}
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              {{ form.is_active }}
+              <label class="form-check-label">Active</label>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+          <button class="btn btn-dark" type="submit"><i class="bi bi-check2-circle me-1"></i>Save</button>
+          <a class="btn btn-outline-secondary" href="{% url 'tables:table_list' %}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

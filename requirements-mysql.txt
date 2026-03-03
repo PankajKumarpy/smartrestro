@@ -1,0 +1,3 @@
+# Optional MySQL requirements (use instead of psycopg*)
+mysqlclient>=2.2
+

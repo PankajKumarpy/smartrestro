@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.pk }} | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">Order #{{ order.pk }}</h1>
+      <div class="text-muted">
+        Table: <span class="fw-semibold">{{ order.table.name }}</span>
+        {% if order.kot_number %} • KOT #{{ order.kot_number }}{% endif %}
+      </div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a class="btn btn-outline-dark" href="{% url 'orders:order_list' %}">
+        <i class="bi bi-arrow-left me-1"></i>Back
+      </a>
+      {% if user.is_superuser or user.role == "ADMIN" or user.role == "MANAGER" or user.role == "WAITER" %}
+        <form method="post" action="{% url 'orders:order_send_to_kitchen' order.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-warning" type="submit" {% if order.status != "PENDING" %}disabled{% endif %}>
+            <i class="bi bi-send me-1"></i>Send to Kitchen
+          </button>
+        </form>
+      {% endif %}
+      {% if user.is_superuser or user.role == "ADMIN" or user.role == "MANAGER" or user.role == "CASHIER" %}
+        <form method="post" action="{% url 'orders:order_mark_completed' order.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-success" type="submit" {% if order.status == "COMPLETED" %}disabled{% endif %}>
+            <i class="bi bi-check2-circle me-1"></i>Complete & Bill
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="fw-semibold mb-2">Add Item</div>
+          <form method="post" action="{% url 'orders:order_add_item' order.pk %}">
+            {% csrf_token %}
+            <div class="mb-2">
+              <label class="form-label small text-muted mb-1">Menu item</label>
+              {{ add_item_form.menu_item }}
+            </div>
+            <div class="mb-3">
+              <label class="form-label small text-muted mb-1">Quantity</label>
+              {{ add_item_form.quantity }}
+            </div>
+            <button class="btn btn-dark w-100" type="submit">
+              <i class="bi bi-plus-circle me-1"></i>Add
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mt-3">
+        <div class="card-body">
+          <div class="fw-semibold mb-2">Summary</div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Subtotal</span>
+            <span class="fw-semibold">₹{{ order.subtotal }}</span>
+          </div>
+          <div class="mt-2">
+            <span class="text-muted small">Status:</span>
+            <span class="badge text-bg-secondary">{{ order.get_status_display }}</span>
+          </div>
+          {% if order.notes %}
+            <div class="text-muted small mt-2">{{ order.notes }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Item</th>
+                <th class="text-end">Price</th>
+                <th class="text-end" style="width: 160px;">Qty</th>
+                <th class="text-end">Total</th>
+                <th>Status</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for it in order.items.all %}
+                <tr>
+                  <td class="fw-semibold">{{ it.menu_item.name }}</td>
+                  <td class="text-end">₹{{ it.unit_price }}</td>
+                  <td class="text-end">
+                    <form method="post" action="{% url 'orders:order_item_set_qty' order.pk it.pk %}" class="d-flex justify-content-end gap-2">
+                      {% csrf_token %}
+                      <input type="number" min="1" name="quantity" value="{{ it.quantity }}" class="form-control form-control-sm" style="max-width: 90px;">
+                      <button class="btn btn-sm btn-outline-dark" type="submit">Update</button>
+                    </form>
+                  </td>
+                  <td class="text-end">₹{{ it.line_total }}</td>
+                  <td>
+                    {% if it.kitchen_status == "READY" %}
+                      <span class="badge text-bg-success">Ready</span>
+                    {% elif it.kitchen_status == "PREPARING" %}
+                      <span class="badge text-bg-warning">Preparing</span>
+                    {% else %}
+                      <span class="badge text-bg-secondary">Pending</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end">
+                    <form method="post" action="{% url 'orders:order_item_remove' order.pk it.pk %}">
+                      {% csrf_token %}
+                      <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
+                    </form>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No items added yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

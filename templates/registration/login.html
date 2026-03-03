@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Login | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-7 col-lg-5">
+      <div class="card shadow-sm border-0 glass-card">
+        <div class="card-body p-4">
+          <h1 class="h4 mb-1 fw-semibold">Sign in</h1>
+          <p class="text-muted mb-4">Use your staff credentials to continue.</p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" name="{{ form.username.name }}" value="{{ form.username.value|default:'' }}"
+                     class="form-control{% if form.username.errors %} is-invalid{% endif %}" autofocus required>
+              {% if form.username.errors %}<div class="invalid-feedback">{{ form.username.errors|striptags }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" name="{{ form.password.name }}"
+                     class="form-control{% if form.password.errors %} is-invalid{% endif %}" required>
+              {% if form.password.errors %}<div class="invalid-feedback">{{ form.password.errors|striptags }}</div>{% endif %}
+            </div>
+
+            <button class="btn btn-dark w-100 mb-2" type="submit">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Login
+            </button>
+          </form>
+          <div class="text-center mt-2">
+            <span class="text-muted small">New restaurant?</span>
+            <a href="{% url 'users:signup' %}" class="small fw-semibold ms-1">Create an account</a>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-muted small mt-3 mb-0">
+        Smart Restaurant Management System
+      </p>
+    </div>
+  </div>
+{% endblock %}
+

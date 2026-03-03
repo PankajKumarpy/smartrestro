@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Delete Menu Item | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <h1 class="h5 fw-semibold mb-2">Delete menu item</h1>
+      <p class="text-muted mb-4">Are you sure you want to delete <strong>{{ object.name }}</strong>?</p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash me-1"></i>Delete</button>
+        <a class="btn btn-outline-secondary" href="{% url 'menu:item_list' %}">Cancel</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Kitchen (KOT) | Smart RMS{% endblock %}
+
+{% block extra_js %}
+  <script>
+    // Simple "real-time" refresh without extra dependencies.
+    setInterval(() => window.location.reload(), 8000);
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 fw-semibold mb-1">Kitchen Order Tickets (KOT)</h1>
+      <div class="text-muted">Shows only food items (no billing info). Auto-refreshes every 8 seconds.</div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    {% for o in orders %}
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="fw-semibold">KOT #{% if o.kot_number %}{{ o.kot_number }}{% else %}-{% endif %} • Table {{ o.table.name }}</div>
+                <div class="text-muted small">Order #{{ o.pk }} • {{ o.created_at|date:"h:i A" }}</div>
+              </div>
+              <span class="badge text-bg-warning">Preparing</span>
+            </div>
+            {% if o.notes %}
+              <div class="text-muted small mt-2"><i class="bi bi-info-circle me-1"></i>{{ o.notes }}</div>
+            {% endif %}
+
+            <hr>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr class="text-muted small">
+                    <th>Item</th>
+                    <th class="text-end">Qty</th>
+                    <th class="text-end">Status</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for it in o.items.all %}
+                    <tr>
+                      <td class="fw-semibold">{{ it.menu_item.name }}</td>
+                      <td class="text-end">{{ it.quantity }}</td>
+                      <td class="text-end">
+                        {% if it.kitchen_status == "READY" %}
+                          <span class="badge text-bg-success">Ready</span>
+                        {% else %}
+                          <span class="badge text-bg-warning">Preparing</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-end">
+                        {% if it.kitchen_status != "READY" %}
+                          <form method="post" action="{% url 'orders:kitchen_item_ready' o.pk it.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-success" type="submit">
+                              <i class="bi bi-check2-circle me-1"></i>Ready
+                            </button>
+                          </form>
+                        {% else %}
+                          <span class="text-muted small">—</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="text-center text-muted py-5">
+          No active KOTs right now.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+

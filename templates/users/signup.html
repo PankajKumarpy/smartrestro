@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Sign up | Smart RMS{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card border-0 shadow-sm glass-card">
+        <div class="card-body p-4 p-md-5">
+          <div class="mb-3 text-center">
+            <h1 class="h4 fw-semibold mb-1">Create your restaurant account</h1>
+            <p class="text-muted mb-0">Set up Smart RMS for day-to-day operations.</p>
+          </div>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row g-3">
+              <div class="col-12">
+                <h2 class="h6 text-uppercase text-muted mb-2">Restaurant</h2>
+              </div>
+              <div class="col-md-8">
+                <label class="form-label">Restaurant name</label>
+                {{ form.restaurant_name }}
+                {% for e in form.restaurant_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Phone</label>
+                {{ form.restaurant_phone }}
+              </div>
+
+              <div class="col-12 mt-3">
+                <h2 class="h6 text-uppercase text-muted mb-2">Owner account</h2>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Username</label>
+                {{ form.owner_username }}
+                {% for e in form.owner_username.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-8">
+                <label class="form-label">Email</label>
+                {{ form.owner_email }}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Password</label>
+                {{ form.owner_password1 }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Confirm password</label>
+                {{ form.owner_password2 }}
+                {% for e in form.owner_password2.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2 flex-wrap">
+              <button class="btn btn-dark px-4" type="submit">
+                <i class="bi bi-rocket-takeoff me-1"></i>Start using Smart RMS
+              </button>
+              <a class="btn btn-outline-secondary" href="{% url 'login' %}">Already have an account? Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+      <p class="text-center text-muted small mt-3 mb-0">
+        Smart Restaurant Management System
+      </p>
+    </div>
+  </div>
+{% endblock %}
+
